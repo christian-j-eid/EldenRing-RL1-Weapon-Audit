@@ -289,6 +289,10 @@ body {
   border-radius: 0; transform: rotate(45deg);
   width: 22px; height: 22px;
 }
+.slot-icon[data-kind="rune"] {
+  border-radius: 2px;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
 .slot-empty-label {
   font-family: var(--mono); font-size: 10px; text-transform: uppercase;
   letter-spacing: 0.14em; color: var(--ink-3);
@@ -335,14 +339,6 @@ body {
   color: var(--ink-2);
 }
 .mod-card[data-on="1"] .mod-card-state { color: var(--gold); }
-.mod-rune { cursor: default; }
-.rune-select {
-  margin-top: 6px;
-  appearance: none; -webkit-appearance: none;
-  background: var(--bg-3); color: var(--ink);
-  border: 1px solid var(--line); padding: 7px 10px; font: inherit; font-size: 13px;
-  font-family: var(--serif); cursor: pointer; border-radius: 0; width: 100%;
-}
 
 /* ── totals (right rail) ───────────────────────────────────────── */
 .totals {

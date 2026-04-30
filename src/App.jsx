@@ -57,7 +57,7 @@ const RUNES = [
   ...rawData.greatRunes.map(r => ({
     id: uid('rune'),
     name: r.name,
-    flavor: r.note,
+    flavor: r.effect,
     bonus: normStats(r.boosts),
   })),
 ]
@@ -102,7 +102,6 @@ function scoreCost(loadout) {
 function solve(weapon, { allowTwoHand = true, allowGreatRune = true, allowTear = true } = {}) {
   const req = weapon.req
   let best = null
-  let bestAttempt = null
 
   const runePool = allowGreatRune ? RUNES : [RUNES[0]]
   const thOptions = allowTwoHand ? [false, true] : [false]
@@ -163,18 +162,10 @@ function solve(weapon, { allowTwoHand = true, allowGreatRune = true, allowTear =
       const ok = STATS.every(k => finalEff[k] >= (req[k] || 0))
       const sc = scoreCost(chosen)
       if (ok && (!best || sc < best.score)) best = { ...chosen, score: sc }
-      if (!ok) {
-        const remaining = Object.values(shortfall(have, req, th)).reduce((a, b) => a + b, 0)
-        if (!bestAttempt || remaining < bestAttempt.remaining ||
-            (remaining === bestAttempt.remaining && sc < bestAttempt.score)) {
-          bestAttempt = { ...chosen, score: sc, remaining }
-        }
-      }
     }
   }
 
-  if (best) return { solvable: true, loadout: best }
-  return { solvable: false, loadout: null, bestAttempt: bestAttempt ?? null }
+  return best ? { solvable: true, loadout: best } : { solvable: false, loadout: null }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -211,6 +202,7 @@ function SlotCard({ kind, item, onClear, onClick, locked, showFlavor }) {
   const empty = !item
   const slotLabel = kind === 'talisman' ? 'Talisman'
     : kind === 'tear' ? 'Crystal Tear'
+    : kind === 'rune' ? 'Great Rune'
     : `Armor · ${locked || 'any'}`
   const bonusText = item ? fmtBonus(item.bonus) : ''
   return (
@@ -255,6 +247,7 @@ function Picker({ open, kind, slotConstraint, excludeIds, onPick, onClose }) {
   if (kind === 'talisman') pool = TALISMANS
   else if (kind === 'tear') pool = TEARS
   else if (kind === 'armor') pool = ARMOR.filter(a => !slotConstraint || a.slot === slotConstraint)
+  else if (kind === 'rune') pool = RUNES.slice(1)
 
   const filtered = pool.filter(it => {
     if (excludeIds.has(it.id)) return false
@@ -263,6 +256,7 @@ function Picker({ open, kind, slotConstraint, excludeIds, onPick, onClose }) {
 
   const kindLabel = kind === 'tear' ? 'Crystal Tear'
     : kind === 'talisman' ? 'Talisman'
+    : kind === 'rune' ? 'Great Rune'
     : slotConstraint ? slotConstraint.charAt(0).toUpperCase() + slotConstraint.slice(1)
     : 'Armor'
 
@@ -403,6 +397,8 @@ export default function App() {
       const next = [...talismans]; next[idx] = item; setTalismans(next)
     } else if (kind === 'tear') {
       const next = [...tears]; next[idx] = item; setTears(next)
+    } else if (kind === 'rune') {
+      setRune(item)
     } else {
       setArmor(prev => ({ ...prev, [slot]: item }))
     }
@@ -426,7 +422,9 @@ export default function App() {
     [weapon, solveAllowTwoHand, solveAllowRune, solveAllowTear]
   )
 
-  const applyLoadout = (lo) => {
+  const handleSolve = () => {
+    if (!solveResult.solvable) return
+    const lo = solveResult.loadout
     setRune(lo.rune)
     setTwoHand(lo.twoHand)
     const tals = [null, null, null, null]
@@ -438,14 +436,6 @@ export default function App() {
     const arm = { head: null, chest: null, arms: null, legs: null }
     lo.armor.forEach(it => { arm[it.slot] = it })
     setArmor(arm)
-  }
-
-  const handleSolve = () => {
-    if (solveResult.solvable) {
-      applyLoadout(solveResult.loadout)
-    } else if (solveResult.bestAttempt) {
-      applyLoadout(solveResult.bestAttempt)
-    }
   }
 
   const hasModifiers = equippedItems.length > 0 || twoHand || rune.id !== 'rune_none'
@@ -555,23 +545,18 @@ export default function App() {
                 <div className="mod-card-sub">×1.5 STR (rounded down)</div>
                 <div className="mod-card-state">{twoHand ? 'On' : 'Off'}</div>
               </button>
-              <div className="mod-card mod-rune">
-                <div className="mod-card-title">Great Rune</div>
-                <select className="rune-select" value={rune.id}
-                        onChange={e => setRune(RUNES.find(r => r.id === e.target.value))}>
-                  {RUNES.map(r => (
-                    <option key={r.id} value={r.id}>
-                      {r.name}{r.bonus && Object.keys(r.bonus).length ? ` (${fmtBonus(r.bonus)})` : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <SlotCard kind="rune" item={rune.id === 'rune_none' ? null : rune} showFlavor={true}
+                        onClick={() => openPicker('rune', null, null)}
+                        onClear={() => setRune(RUNES[0])} />
             </div>
           </div>
 
         </div>
 
         <aside className="totals">
+          <button className="btn-primary" style={{ width: '100%' }} onClick={handleSolve} disabled={!solveResult.solvable}>
+            {solveResult.solvable ? 'Auto-solve' : 'No solution'}
+          </button>
           <div className={`verdict ${meetsAll ? 'verdict-ok' : 'verdict-no'}`}>
             <div className="verdict-mark">{meetsAll ? '✓' : '✕'}</div>
             <div className="verdict-text">
