@@ -12856,11 +12856,13 @@
   "talismans": [
     {
       "name": "Aged One's Exultation",
-      "effect": "Madness in the vicinity increases attack power"
+      "effect": "Madness in the vicinity increases attack power",
+      "dlc": true
     },
     {
       "name": "Ailment Talisman",
-      "effect": "Grants resistance to triggered ailments"
+      "effect": "Grants resistance to triggered ailments",
+      "dlc": true
     },
     {
       "name": "Ancestral Spirit's Horn",
@@ -12872,7 +12874,8 @@
     },
     {
       "name": "Arrow's Soaring Sting Talisman",
-      "effect": "Increases the effective range of bows and raises attack power of arrows and bolts"
+      "effect": "Increases the effective range of bows and raises attack power of arrows and bolts",
+      "dlc": true
     },
     {
       "name": "Arrow's Sting Talisman",
@@ -12900,15 +12903,18 @@
     },
     {
       "name": "Beloved Stardust",
-      "effect": "Shortens casting speed for sorcery and incantations by the utmost, but increases damage taken"
+      "effect": "Shortens casting speed for sorcery and incantations by the utmost, but increases damage taken",
+      "dlc": true
     },
     {
       "name": "Blade of Mercy",
-      "effect": "Raises attack power after each critical hit"
+      "effect": "Raises attack power after each critical hit",
+      "dlc": true
     },
     {
       "name": "Blessed Blue Dew Talisman",
-      "effect": "Slowly restores FP"
+      "effect": "Slowly restores FP",
+      "dlc": true
     },
     {
       "name": "Blessed Dew Talisman",
@@ -12936,7 +12942,8 @@
     },
     {
       "name": "Boltdrake Talisman +3",
-      "effect": "Reduces lightning damage"
+      "effect": "Reduces lightning damage",
+      "dlc": true
     },
     {
       "name": "Bull-Goat's Talisman",
@@ -12960,7 +12967,8 @@
     },
     {
       "name": "Cerulean Amber Medallion +3",
-      "effect": "Boosts maximum FP by the utmost"
+      "effect": "Boosts maximum FP by the utmost",
+      "dlc": true
     },
     {
       "name": "Cerulean Seed Talisman",
@@ -12968,7 +12976,8 @@
     },
     {
       "name": "Cerulean Seed Talisman +1",
-      "effect": "Boosts FP restoration from the Flask of Cerulean Tears"
+      "effect": "Boosts FP restoration from the Flask of Cerulean Tears",
+      "dlc": true
     },
     {
       "name": "Clarifying Horn Charm",
@@ -12980,7 +12989,8 @@
     },
     {
       "name": "Clarifying Horn Charm +2",
-      "effect": "Raises Focus by +230"
+      "effect": "Raises Focus by +230",
+      "dlc": true
     },
     {
       "name": "Claw Talisman",
@@ -13012,7 +13022,8 @@
     },
     {
       "name": "Crimson Amber Medallion +3",
-      "effect": "Vastly raises maximum HP"
+      "effect": "Vastly raises maximum HP",
+      "dlc": true
     },
     {
       "name": "Crimson Seed Talisman",
@@ -13020,7 +13031,8 @@
     },
     {
       "name": "Crimson Seed Talisman +1",
-      "effect": "Boosts HP restoration from the Flask of Crimson Tears"
+      "effect": "Boosts HP restoration from the Flask of Crimson Tears",
+      "dlc": true
     },
     {
       "name": "Crucible Feather Talisman",
@@ -13036,7 +13048,8 @@
     },
     {
       "name": "Crusade Insignia",
-      "effect": "Raises attack power after defeating an enemy"
+      "effect": "Raises attack power after defeating an enemy",
+      "dlc": true
     },
     {
       "name": "Curved Sword Talisman",
@@ -13068,15 +13081,13 @@
     },
     {
       "name": "Dried Bouquet",
-      "effect": "Raises attack power when summoned spirit dies"
-    },
-    {
-      "name": "Elden Ring Talisman Template",
-      "effect": ""
+      "effect": "Raises attack power when summoned spirit dies",
+      "dlc": true
     },
     {
       "name": "Enraged Divine Beast",
-      "effect": "Raises potency of storms by 10%"
+      "effect": "Raises potency of storms by 10%",
+      "dlc": true
     },
     {
       "name": "Erdtree's Favor",
@@ -13096,7 +13107,8 @@
     },
     {
       "name": "Fine Crucible Feather Talisman",
-      "effect": ""
+      "effect": "",
+      "dlc": true
     },
     {
       "name": "Fire Scorpion Charm",
@@ -13116,7 +13128,8 @@
     },
     {
       "name": "Flamedrake Talisman +3",
-      "effect": "Boosts fire damage negation by the utmost"
+      "effect": "Boosts fire damage negation by the utmost",
+      "dlc": true
     },
     {
       "name": "Flock's Canvas Talisman",
@@ -13140,7 +13153,8 @@
     },
     {
       "name": "Golden Braid",
-      "effect": "Boosts holy damage negation by the utmost"
+      "effect": "Boosts holy damage negation by the utmost",
+      "dlc": true
     },
     {
       "name": "Graven-Mass Talisman",
@@ -13192,7 +13206,8 @@
     },
     {
       "name": "Immunizing Horn Charm +2",
-      "effect": "Raises Immunity by +180"
+      "effect": "Raises Immunity by +180",
+      "dlc": true
     },
     {
       "name": "Kindred of Rot's Exultation",
@@ -13200,7 +13215,8 @@
     },
     {
       "name": "Lacerating Crossed-Tree",
-      "effect": "Enhances dash attacks"
+      "effect": "Enhances dash attacks",
+      "dlc": true
     },
     {
       "name": "Lance Talisman",
@@ -13261,7 +13277,8 @@
     },
     {
       "name": "Mottled Necklace +2",
-      "effect": "Raises Immunity, Robustness, and Focus by +100 each"
+      "effect": "Raises Immunity, Robustness, and Focus by +100 each",
+      "dlc": true
     },
     {
       "name": "Old Lord's Talisman",
@@ -13272,11 +13289,13 @@
       "effect": "Raises arcane by 5",
       "boosts": {
         "arc": 5
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Pearl Shield Talisman",
-      "effect": "Boosts all non-physical damage negation by 20% while guarding"
+      "effect": "Boosts all non-physical damage negation by 20% while guarding",
+      "dlc": true
     },
     {
       "name": "Pearldrake Talisman",
@@ -13292,7 +13311,8 @@
     },
     {
       "name": "Pearldrake Talisman +3",
-      "effect": "Boosts non-physical damage negation by the utmost"
+      "effect": "Boosts non-physical damage negation by the utmost",
+      "dlc": true
     },
     {
       "name": "Perfumer's Talisman",
@@ -13343,11 +13363,13 @@
     },
     {
       "name": "Rellana's Cameo",
-      "effect": "Enhances attacks executed after maintaining the same stance for an extended period"
+      "effect": "Enhances attacks executed after maintaining the same stance for an extended period",
+      "dlc": true
     },
     {
       "name": "Retaliatory Crossed-Tree",
-      "effect": "Enhances attacks executed after rolling or backstepping"
+      "effect": "Enhances attacks executed after rolling or backstepping",
+      "dlc": true
     },
     {
       "name": "Ritual Shield Talisman",
@@ -13383,11 +13405,13 @@
     },
     {
       "name": "Sharpshot Talisman",
-      "effect": "Boosts attack power of precision-aimed shots"
+      "effect": "Boosts attack power of precision-aimed shots",
+      "dlc": true
     },
     {
       "name": "Shattered Stone Talisman",
-      "effect": "Raises potency of kicking and stomping skills"
+      "effect": "Raises potency of kicking and stomping skills",
+      "dlc": true
     },
     {
       "name": "Silver Scarab",
@@ -13395,7 +13419,8 @@
     },
     {
       "name": "Smithing Talisman",
-      "effect": "Enhances weapon throwing  attacks"
+      "effect": "Enhances weapon throwing  attacks",
+      "dlc": true
     },
     {
       "name": "Spear Talisman",
@@ -13415,11 +13440,13 @@
     },
     {
       "name": "Spelldrake Talisman +3",
-      "effect": "Boosts magical damage negation by the utmost"
+      "effect": "Boosts magical damage negation by the utmost",
+      "dlc": true
     },
     {
       "name": "St. Trina's Smile",
-      "effect": "Sleep in the vicinity increases attack power"
+      "effect": "Sleep in the vicinity increases attack power",
+      "dlc": true
     },
     {
       "name": "Stalwart Horn Charm",
@@ -13431,7 +13458,8 @@
     },
     {
       "name": "Stalwart Horn Charm +2",
-      "effect": "Raises Robustness by +180"
+      "effect": "Raises Robustness by +180",
+      "dlc": true
     },
     {
       "name": "Stargazer Heirloom",
@@ -13453,15 +13481,18 @@
     },
     {
       "name": "Talisman of All Crucibles",
-      "effect": "Grants effects of all crucible talismans"
+      "effect": "Grants effects of all crucible talismans",
+      "dlc": true
     },
     {
       "name": "Talisman of Lord's Bestowal",
-      "effect": "Increases poise after using a Flask of Crimson Tears"
+      "effect": "Increases poise after using a Flask of Crimson Tears",
+      "dlc": true
     },
     {
       "name": "Talisman of the Dread",
-      "effect": "Raises potency of magma"
+      "effect": "Raises potency of magma",
+      "dlc": true
     },
     {
       "name": "Twinblade Talisman",
@@ -13476,15 +13507,18 @@
     },
     {
       "name": "Two-Handed Sword Talisman",
-      "effect": "Enhances two-handed attacks"
+      "effect": "Enhances two-handed attacks",
+      "dlc": true
     },
     {
       "name": "Two-Headed Turtle Talisman",
-      "effect": "Greatly raises stamina recovery speed"
+      "effect": "Greatly raises stamina recovery speed",
+      "dlc": true
     },
     {
       "name": "Verdigris Discus",
-      "effect": "Raises defense with higher equipment load"
+      "effect": "Raises defense with higher equipment load",
+      "dlc": true
     },
     {
       "name": "Viridian Amber Medallion",
@@ -13500,7 +13534,8 @@
     },
     {
       "name": "Viridian Amber Medallion +3",
-      "effect": "Raises maximum stamina"
+      "effect": "Raises maximum stamina",
+      "dlc": true
     },
     {
       "name": "Warrior Jar Shard",
@@ -13515,7 +13550,8 @@
     {
       "name": "Bloodsucking Cracked Tear",
       "effect": "Enhances attacks at the cost of HP in mixed physick",
-      "temporary": true
+      "temporary": true,
+      "dlc": true
     },
     {
       "name": "Cerulean Crystal Tear",
@@ -13530,7 +13566,8 @@
     {
       "name": "Cerulean-Sapping Cracked Tear",
       "effect": "Grants attacks FP-restoring effect in mixed physick",
-      "temporary": true
+      "temporary": true,
+      "dlc": true
     },
     {
       "name": "Crimson Crystal Tear",
@@ -13540,7 +13577,8 @@
     {
       "name": "Crimson-Sapping Cracked Tear",
       "effect": "Grants attacks HP-restoring effect in mixed physick",
-      "temporary": true
+      "temporary": true,
+      "dlc": true
     },
     {
       "name": "Crimsonburst Crystal Tear",
@@ -13550,7 +13588,8 @@
     {
       "name": "Crimsonburst Dried Tear",
       "effect": "Steadily restores HP of nearby allies for a time in mixed physick",
-      "temporary": true
+      "temporary": true,
+      "dlc": true
     },
     {
       "name": "Crimsonspill Crystal Tear",
@@ -13565,7 +13604,8 @@
     {
       "name": "Deflecting Hardtear",
       "effect": "Enhances spontaneous guard in mixed physick",
-      "temporary": true
+      "temporary": true,
+      "dlc": true
     },
     {
       "name": "Dexterity-knot Crystal Tear",
@@ -13586,7 +13626,8 @@
     {
       "name": "Glovewort Crystal Tear",
       "effect": "Enhances attacks of spirits in mixed physick.",
-      "temporary": true
+      "temporary": true,
+      "dlc": true
     },
     {
       "name": "Greenburst Crystal Tear",
@@ -13624,7 +13665,8 @@
     {
       "name": "Oil-Soaked Tear",
       "effect": "Coats nearby enemies with oil in mixed physick",
-      "temporary": true
+      "temporary": true,
+      "dlc": true
     },
     {
       "name": "Opaline Bubbletear",
@@ -13667,7 +13709,8 @@
     {
       "name": "Viridian Hidden Tear",
       "effect": "Eliminates all stamina consumption in mixed physick",
-      "temporary": true
+      "temporary": true,
+      "dlc": true
     },
     {
       "name": "Windy Crystal Tear",
@@ -13695,7 +13738,8 @@
       "slot": "Chest",
       "boosts": {
         "arc": 2
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Circlet of Light",
@@ -13704,14 +13748,16 @@
         "int": 1,
         "fai": 1,
         "arc": 1
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Curseblade Mask",
       "slot": "Head",
       "boosts": {
         "dex": 5
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Divine Beast Head",
@@ -13719,7 +13765,8 @@
       "boosts": {
         "str": 4,
         "dex": 4
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Divine Beast Helm",
@@ -13727,7 +13774,8 @@
       "boosts": {
         "str": 3,
         "dex": 3
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Divine Bird Helm",
@@ -13735,7 +13783,8 @@
       "boosts": {
         "str": 3,
         "dex": 4
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Greathood",
@@ -13751,14 +13800,16 @@
       "boosts": {
         "int": 1,
         "arc": 1
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Horned Warrior Helm",
       "slot": "Head",
       "boosts": {
         "str": 5
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Imp Head (Cat)",
@@ -13842,14 +13893,16 @@
       "slot": "Head",
       "boosts": {
         "int": 2
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Thiollier's Mask",
       "slot": "Head",
       "boosts": {
         "arc": 3
-      }
+      },
+      "dlc": true
     },
     {
       "name": "Twinsage Glintstone Crown",

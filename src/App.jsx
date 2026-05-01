@@ -49,6 +49,7 @@ const TALISMANS = rawData.talismans.map(t => ({
   name: t.name,
   flavor: t.effect,
   bonus: normStats(t.boosts),
+  dlc: !!t.dlc,
 }))
 
 const TEARS = rawData.crystalTears.map(t => ({
@@ -56,6 +57,7 @@ const TEARS = rawData.crystalTears.map(t => ({
   name: t.name,
   flavor: t.effect,
   bonus: normStats(t.boosts),
+  dlc: !!t.dlc,
 }))
 
 const ARMOR = rawData.armor.map(a => ({
@@ -63,6 +65,7 @@ const ARMOR = rawData.armor.map(a => ({
   name: a.name,
   slot: a.slot.toLowerCase(),
   bonus: normStats(a.boosts),
+  dlc: !!a.dlc,
 }))
 
 const RUNES = [
@@ -146,13 +149,13 @@ function armorSubsets(armorPool) {
   return result
 }
 
-function solveAll(weapon, { allowGreatRune = true, allowArmor = true, allowTwoHand = true, allowTear = true } = {}) {
+function solveAll(weapon, { allowGreatRune = true, allowArmor = true, allowTwoHand = true, allowTear = true, talismanPool = TALISMANS, tearPool = TEARS, runeData = RUNES } = {}) {
   const req = weapon.req
   const results = []
 
   const runePool = allowGreatRune
-    ? RUNES.filter(r => r.id === 'rune_none' || Object.keys(r.bonus).length > 0)
-    : [RUNES[0]]
+    ? runeData.filter(r => r.id === 'rune_none' || Object.keys(r.bonus).length > 0)
+    : [runeData.find(r => r.id === 'rune_none') ?? RUNES[0]]
   const thOptions = allowTwoHand ? [false, true] : [false]
 
   for (const rune of runePool) {
@@ -170,9 +173,9 @@ function solveAll(weapon, { allowGreatRune = true, allowArmor = true, allowTwoHa
 
       const neededStats = new Set(Object.keys(baseNeed))
       const relTears = allowTear
-        ? TEARS.filter(t => STATS.some(k => neededStats.has(k) && t.bonus[k] > 0))
+        ? tearPool.filter(t => STATS.some(k => neededStats.has(k) && t.bonus[k] > 0))
         : []
-      const relTals = TALISMANS.filter(t => STATS.some(k => neededStats.has(k) && t.bonus[k] > 0))
+      const relTals = talismanPool.filter(t => STATS.some(k => neededStats.has(k) && t.bonus[k] > 0))
       const relArmor = ARMOR.filter(a => STATS.some(k => neededStats.has(k) && a.bonus[k] > 0))
 
       const tearCombos = subsetsUpTo(relTears, 2)
@@ -231,12 +234,12 @@ function solveAll(weapon, { allowGreatRune = true, allowArmor = true, allowTwoHa
   return results.sort((a, b) => a.score - b.score)
 }
 
-function solve(weapon, { allowTwoHand = true, allowGreatRune = true, allowTear = true } = {}) {
+function solve(weapon, { allowTwoHand = true, allowGreatRune = true, allowTear = true, talismanPool = TALISMANS, tearPool = TEARS, runeData = RUNES } = {}) {
   const req = weapon.req
   let best = null
   let bestAttempt = null
 
-  const runePool = allowGreatRune ? RUNES : [RUNES[0]]
+  const runePool = allowGreatRune ? runeData : [runeData.find(r => r.id === 'rune_none') ?? RUNES[0]]
   const thOptions = allowTwoHand ? [false, true] : [false]
 
   for (const rune of runePool) {
@@ -266,7 +269,7 @@ function solve(weapon, { allowTwoHand = true, allowGreatRune = true, allowTear =
 
       const usedTears = new Set()
       if (allowTear) for (let i = 0; i < 2 && stillNeed(); i++) {
-        const it = pickBest(TEARS, usedTears)
+        const it = pickBest(tearPool, usedTears)
         if (!it) break
         usedTears.add(it.id)
         chosen.tears.push(it)
@@ -275,7 +278,7 @@ function solve(weapon, { allowTwoHand = true, allowGreatRune = true, allowTear =
 
       const usedTal = new Set()
       for (let i = 0; i < 4 && stillNeed(); i++) {
-        const it = pickBest(TALISMANS, usedTal)
+        const it = pickBest(talismanPool, usedTal)
         if (!it) break
         usedTal.add(it.id)
         chosen.talismans.push(it)
@@ -376,7 +379,7 @@ function SlotCard({ kind, item, onClear, onClick, locked, showFlavor, active }) 
 
 // ── Picker ────────────────────────────────────────────────────────────────────
 
-function Picker({ open, kind, slotConstraint, excludeIds, onPick, onClose }) {
+function Picker({ open, kind, slotConstraint, excludeIds, onPick, onClose, activeTalismans, activeTears, activeArmor }) {
   const [q, setQ] = useState('')
   const inputRef = useRef(null)
 
@@ -387,9 +390,9 @@ function Picker({ open, kind, slotConstraint, excludeIds, onPick, onClose }) {
   if (!open) return null
 
   let pool = []
-  if (kind === 'talisman') pool = TALISMANS
-  else if (kind === 'tear') pool = TEARS
-  else if (kind === 'armor') pool = ARMOR.filter(a => !slotConstraint || a.slot === slotConstraint)
+  if (kind === 'talisman') pool = activeTalismans ?? TALISMANS
+  else if (kind === 'tear') pool = activeTears ?? TEARS
+  else if (kind === 'armor') pool = (activeArmor ?? ARMOR).filter(a => !slotConstraint || a.slot === slotConstraint)
   else if (kind === 'rune') pool = RUNES.slice(1)
 
   const filtered = pool.filter(it => {
@@ -421,7 +424,10 @@ function Picker({ open, kind, slotConstraint, excludeIds, onPick, onClose }) {
           {filtered.length === 0 && <div className="picker-empty">No items match.</div>}
           {filtered.map(it => (
             <button key={it.id} className="picker-item" onClick={() => onPick(it)}>
-              <div className="picker-item-name">{it.name}</div>
+              <div className="picker-item-name">
+                {it.name}
+                {it.dlc && <span className="wp-sote">SOTE</span>}
+              </div>
               {fmtBonus(it.bonus) && <div className="picker-item-bonus">{fmtBonus(it.bonus)}</div>}
               {it.flavor && <div className="picker-item-flavor">{it.flavor}</div>}
             </button>
@@ -472,7 +478,10 @@ function WeaponPicker({ weapon, onChange }) {
                       data-active={w.id === weapon.id ? '1' : '0'}
                       onClick={() => { onChange(w); setOpen(false); setQ('') }}>
                 <div className="wp-name">{w.name}</div>
-                <div className="wp-cat">{w.cat}</div>
+                <div className="wp-cat">
+                  {w.cat}
+                  {w.dlc && <span className="wp-sote">SOTE</span>}
+                </div>
                 <div className="wp-req">
                   {STATS.filter(k => w.req[k]).map(k => (
                     <span key={k} className="wp-req-pill" style={{ '--hue': STAT_HUE[k] }}>
@@ -547,6 +556,11 @@ export default function App() {
   const [solveAllowTear, setSolveAllowTear] = useState(true)
   const [solveAllowTwoHand, setSolveAllowTwoHand] = useState(true)
 
+  const [advancedOpen, setAdvancedOpen] = useState(false)
+  const [includeDLC, setIncludeDLC] = useState(true)
+  const [excludedIds, setExcludedIds] = useState(new Set())
+  const [excludeQuery, setExcludeQuery] = useState('')
+
   const equippedItems = [
     ...talismans.filter(Boolean),
     ...tears.filter(Boolean),
@@ -603,14 +617,53 @@ export default function App() {
   }
 
 
+  const activeTalismans = useMemo(
+    () => TALISMANS.filter(t => (includeDLC || !t.dlc) && !excludedIds.has(t.id)),
+    [includeDLC, excludedIds]
+  )
+  const activeTears = useMemo(
+    () => TEARS.filter(t => (includeDLC || !t.dlc) && !excludedIds.has(t.id)),
+    [includeDLC, excludedIds]
+  )
+  const activeArmor = useMemo(
+    () => ARMOR.filter(a => (includeDLC || !a.dlc)),
+    [includeDLC]
+  )
+  const activeRunes = useMemo(
+    () => RUNES.filter(r => r.id === 'rune_none' || !excludedIds.has(r.id)),
+    [excludedIds]
+  )
+
+  const allSearchableItems = useMemo(() => [
+    ...TALISMANS.map(t => ({ ...t, category: 'Talisman' })),
+    ...TEARS.map(t => ({ ...t, category: 'Tear' })),
+    ...RUNES.filter(r => r.id !== 'rune_none').map(r => ({ ...r, category: 'Rune' })),
+  ], [])
+
+  const excludeResults = useMemo(() => {
+    const q = excludeQuery.trim().toLowerCase()
+    if (!q) return []
+    return allSearchableItems
+      .filter(it => it.name.toLowerCase().includes(q) && !excludedIds.has(it.id))
+      .slice(0, 8)
+  }, [excludeQuery, excludedIds, allSearchableItems])
+
+  const allExcludedItems = useMemo(
+    () => allSearchableItems.filter(it => excludedIds.has(it.id)),
+    [excludedIds, allSearchableItems]
+  )
+
+  const addExcluded = id => setExcludedIds(prev => new Set([...prev, id]))
+  const removeExcluded = id => setExcludedIds(prev => { const s = new Set(prev); s.delete(id); return s })
+
   const allSolutions = useMemo(
-    () => solveAll(weapon, { allowGreatRune: solveAllowRune, allowArmor: false, allowTwoHand: solveAllowTwoHand, allowTear: solveAllowTear }),
-    [weapon, solveAllowRune, solveAllowTwoHand, solveAllowTear]
+    () => solveAll(weapon, { allowGreatRune: solveAllowRune, allowArmor: false, allowTwoHand: solveAllowTwoHand, allowTear: solveAllowTear, talismanPool: activeTalismans, tearPool: activeTears, runeData: activeRunes }),
+    [weapon, solveAllowRune, solveAllowTwoHand, solveAllowTear, activeTalismans, activeTears, activeRunes]
   )
   const solvable = allSolutions.length > 0
   const closestAttempt = useMemo(
-    () => solvable ? null : solve(weapon, { allowTwoHand: solveAllowTwoHand, allowGreatRune: solveAllowRune, allowTear: solveAllowTear }).bestAttempt,
-    [weapon, solvable, solveAllowTwoHand, solveAllowRune, solveAllowTear]
+    () => solvable ? null : solve(weapon, { allowTwoHand: solveAllowTwoHand, allowGreatRune: solveAllowRune, allowTear: solveAllowTear, talismanPool: activeTalismans, tearPool: activeTears, runeData: activeRunes }).bestAttempt,
+    [weapon, solvable, solveAllowTwoHand, solveAllowRune, solveAllowTear, activeTalismans, activeTears, activeRunes]
   )
 
   const applyLoadout = (lo) => {
@@ -651,6 +704,7 @@ export default function App() {
           </div>
         </div>
         <div className="topbar-actions">
+          <button className="btn-ghost" onClick={() => setAdvancedOpen(v => !v)} data-on={advancedOpen ? '1' : '0'} style={{ fontSize: '11px', letterSpacing: '0.1em', fontWeight: 600, textTransform: 'uppercase' }}>Advanced</button>
           <button className="btn-ghost" onClick={clearAll} style={{ fontSize: '11px', letterSpacing: '0.1em', fontWeight: 600, textTransform: 'uppercase' }}>Clear</button>
           <button className="btn-primary" onClick={handleSolve} disabled={!solvable}>
             {solvable ? (
@@ -734,6 +788,57 @@ export default function App() {
           </div>
         )}
       </section>
+
+      {advancedOpen && (
+        <section className="advanced-panel">
+          <div className="advanced-panel-grid">
+
+            <div className="advanced-group">
+              <div className="advanced-group-title">DLC Content (Shadow of the Erdtree)</div>
+              <button className="solve-toggle" data-on={includeDLC ? '1' : '0'} onClick={() => setIncludeDLC(v => !v)}>
+                <span>Include DLC Talismans, Tears &amp; Armor</span>
+                <span className="solve-toggle-state">
+                  <span className="solve-toggle-label">Off</span>
+                  <span className="solve-toggle-label">On</span>
+                </span>
+              </button>
+            </div>
+
+            <div className="advanced-group">
+              <div className="advanced-group-title">Exclude from Solutions</div>
+              <div className="excl-search-wrap">
+                <input
+                  className="excl-input"
+                  placeholder="Search talismans, tears, runes…"
+                  value={excludeQuery}
+                  onChange={e => setExcludeQuery(e.target.value)}
+                />
+                {excludeResults.length > 0 && (
+                  <div className="excl-results">
+                    {excludeResults.map(it => (
+                      <button key={it.id} className="excl-result-row" onClick={() => { addExcluded(it.id); setExcludeQuery('') }}>
+                        <span className="excl-result-name">{it.name}</span>
+                        <span className="excl-result-cat">{it.category}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {allExcludedItems.length > 0 && (
+                <div className="excl-chips">
+                  {allExcludedItems.map(it => (
+                    <span key={it.id} className="excl-chip">
+                      {it.name}
+                      <button className="excl-chip-x" onClick={() => removeExcluded(it.id)}>×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+          </div>
+        </section>
+      )}
 
       <main className="main-grid">
         <div className="slot-region">
@@ -911,6 +1016,9 @@ export default function App() {
         }
         onPick={handlePick}
         onClose={closePicker}
+        activeTalismans={activeTalismans}
+        activeTears={activeTears}
+        activeArmor={activeArmor}
       />
     </div>
   )
