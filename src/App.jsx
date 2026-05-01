@@ -151,7 +151,6 @@ function solveAll(weapon, { allowGreatRune = true, allowArmor = true, allowTwoHa
   const results = []
   const MAX = 50
 
-  // Only stat-boosting runes (or no rune)
   const runePool = allowGreatRune
     ? RUNES.filter(r => r.id === 'rune_none' || Object.keys(r.bonus).length > 0)
     : [RUNES[0]]
