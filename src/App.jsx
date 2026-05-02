@@ -648,6 +648,7 @@ export default function App() {
   const [solveAllowRune, setSolveAllowRune] = useState(true)
   const [solveAllowTear, setSolveAllowTear] = useState(true)
   const [solveAllowTwoHand, setSolveAllowTwoHand] = useState(true)
+  const [solveKeepLoadout, setSolveKeepLoadout] = useState(false)
 
   const [advancedOpen, setAdvancedOpen] = useState(false)
   const [includeDLC, setIncludeDLC] = useState(true)
@@ -742,6 +743,58 @@ export default function App() {
     [weapon, solvable, solveAllowTwoHand, solveAllowRune, solveAllowTear, activeTalismans, activeTears, activeRunes]
   )
 
+  const mergeFill = (source) => {
+    const existingTalIds = new Set(talismans.filter(Boolean).map(t => t.id))
+    const newTals = [...talismans]
+    for (const it of source.talismans) {
+      if (!existingTalIds.has(it.id)) {
+        const empty = newTals.findIndex(s => !s)
+        if (empty !== -1) { newTals[empty] = it; existingTalIds.add(it.id) }
+      }
+    }
+    const existingTearIds = new Set(tears.filter(Boolean).map(t => t.id))
+    const newTears = [...tears]
+    for (const it of source.tears) {
+      if (!existingTearIds.has(it.id)) {
+        const empty = newTears.findIndex(s => !s)
+        if (empty !== -1) { newTears[empty] = it; existingTearIds.add(it.id) }
+      }
+    }
+    setTalismans(newTals)
+    setTears(newTears)
+    if (rune.id === 'rune_none') setRune(source.rune)
+  }
+
+  const filteredSolutions = useMemo(() => {
+    if (!solveKeepLoadout) return allSolutions
+    const equippedTalIds = new Set(talismans.filter(Boolean).map(t => t.id))
+    const equippedTearIds = new Set(tears.filter(Boolean).map(t => t.id))
+    return allSolutions.filter(sol => {
+      const mergedTals = [...talismans]
+      const seenTal = new Set(equippedTalIds)
+      for (const it of sol.talismans) {
+        if (!seenTal.has(it.id)) {
+          const empty = mergedTals.findIndex(s => !s)
+          if (empty !== -1) { mergedTals[empty] = it; seenTal.add(it.id) }
+        }
+      }
+      const mergedTears = [...tears]
+      const seenTear = new Set(equippedTearIds)
+      for (const it of sol.tears) {
+        if (!seenTear.has(it.id)) {
+          const empty = mergedTears.findIndex(s => !s)
+          if (empty !== -1) { mergedTears[empty] = it; seenTear.add(it.id) }
+        }
+      }
+      const mergedRune = rune.id !== 'rune_none' ? rune : sol.rune
+      const have = sumBonus([{ bonus: BASE_STATS }, { bonus: mergedRune.bonus || {} }, ...mergedTals.filter(Boolean), ...mergedTears.filter(Boolean)])
+      return STATS.every(k => {
+        const eff = k === 'STR' && sol.twoHand ? Math.floor(have[k] * 1.5) : have[k]
+        return eff >= (weapon.req[k] || 0)
+      })
+    })
+  }, [allSolutions, solveKeepLoadout, talismans, tears, rune, weapon])
+
   const applyLoadout = (lo) => {
     setRune(lo.rune)
     setTwoHand(lo.twoHand)
@@ -758,12 +811,17 @@ export default function App() {
 
   const handleSolve = () => {
     if (!solvable) return
-    applyLoadout(allSolutions[0])
+    solveKeepLoadout ? mergeFill(filteredSolutions[0] ?? allSolutions[0]) : applyLoadout(allSolutions[0])
   }
 
   const handleSolveClosest = () => {
-    if (solvable) applyLoadout(allSolutions[0])
-    else if (closestAttempt) applyLoadout(closestAttempt)
+    if (solveKeepLoadout) {
+      const source = filteredSolutions.length > 0 ? filteredSolutions[0] : null
+      if (source) mergeFill(source)
+    } else {
+      const source = allSolutions.length > 0 ? allSolutions[0] : closestAttempt
+      if (source) applyLoadout(source)
+    }
   }
 
   const hasModifiers = equippedItems.length > 0 || twoHand || rune.id !== 'rune_none'
@@ -917,13 +975,22 @@ export default function App() {
         <div className="slot-region">
           <div className="slot-region-title">
             <span>Equipment</span>
-            <button className="solve-toggle" data-on={statBoostOnly ? '1' : '0'} onClick={() => setStatBoostOnly(v => !v)}>
-              <span>Stat boosts only</span>
-              <span className="solve-toggle-state">
-                <span className="solve-toggle-label">Off</span>
-                <span className="solve-toggle-label">On</span>
-              </span>
-            </button>
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <button className="solve-toggle" data-on={statBoostOnly ? '1' : '0'} onClick={() => setStatBoostOnly(v => !v)}>
+                <span>Show Only Stat Boosting Items</span>
+                <span className="solve-toggle-state">
+                  <span className="solve-toggle-label">Off</span>
+                  <span className="solve-toggle-label">On</span>
+                </span>
+              </button>
+              <button className="solve-toggle" data-on={solveKeepLoadout ? '1' : '0'} onClick={() => setSolveKeepLoadout(v => !v)}>
+                <span>Keep Current Loadout</span>
+                <span className="solve-toggle-state">
+                  <span className="solve-toggle-label">Off</span>
+                  <span className="solve-toggle-label">On</span>
+                </span>
+              </button>
+            </div>
           </div>
 
           <div className="region">
@@ -1018,7 +1085,7 @@ export default function App() {
               <button className="btn-primary" style={{ width: '100%' }} onClick={handleSolveClosest}>
                 Auto-solve
               </button>
-              <SolutionsList solutions={allSolutions} onApply={applyLoadout} />
+              <SolutionsList solutions={filteredSolutions} onApply={solveKeepLoadout ? mergeFill : applyLoadout} />
               <div className={`verdict ${meetsAll ? 'verdict-ok' : 'verdict-no'}`}>
                 <div className="verdict-mark">{meetsAll ? '✓' : '✕'}</div>
                 <div className="verdict-text">
