@@ -14,6 +14,9 @@ const ATK_HUE = { mag: 220, fir: 22, lit: 80, hol: 50 }
 
 // ── Data normalization ────────────────────────────────────────────────────────
 
+const wikiImg = filename =>
+  `https://eldenring.wiki.gg/wiki/Special:FilePath/${encodeURIComponent(filename)}`
+
 function normStats(obj) {
   if (!obj) return {}
   const out = {}
@@ -75,6 +78,7 @@ const RUNES = [
     name: r.name,
     flavor: r.effect,
     bonus: normStats(r.boosts),
+    image: r.image || null,
   })),
 ]
 
@@ -364,6 +368,7 @@ function SlotCard({ kind, item, onClear, onClick, locked, showFlavor, active }) 
           </div>
         ) : (
           <div className="slot-filled">
+            {/* item.image && <img className="slot-item-img" src={wikiImg(item.image)} alt="" onError={e => { e.target.style.display = 'none' }} /> */}
             <div className="slot-name">{item.name}</div>
             {bonusText && <div className="slot-bonus">{bonusText}</div>}
             {showFlavor && item.flavor && <div className="slot-flavor">{item.flavor}</div>}
@@ -425,6 +430,7 @@ function Picker({ open, kind, slotConstraint, excludeIds, onPick, onClose, activ
           {filtered.map(it => (
             <button key={it.id} className="picker-item" onClick={() => onPick(it)}>
               <div className="picker-item-name">
+                {/* it.image && <img className="picker-item-img" src={wikiImg(it.image)} alt="" onError={e => { e.target.style.display = 'none' }} /> */}
                 {it.name}
                 {it.dlc && <span className="wp-sote">SOTE</span>}
               </div>
@@ -739,7 +745,7 @@ export default function App() {
   )
   const solvable = allSolutions.length > 0
   const closestAttempt = useMemo(
-    () => solvable ? null : solve(weapon, { allowTwoHand: solveAllowTwoHand, allowGreatRune: solveAllowRune, allowTear: solveAllowTear, talismanPool: activeTalismans, tearPool: activeTears, runeData: activeRunes }).bestAttempt,
+    () => { if (solvable) return null; const r = solve(weapon, { allowTwoHand: solveAllowTwoHand, allowGreatRune: solveAllowRune, allowTear: solveAllowTear, talismanPool: activeTalismans, tearPool: activeTears, runeData: activeRunes }); return r.loadout ?? r.bestAttempt },
     [weapon, solvable, solveAllowTwoHand, solveAllowRune, solveAllowTear, activeTalismans, activeTears, activeRunes]
   )
 

@@ -13917,6 +13917,7 @@
       "name": "Godrick's Great Rune",
       "effect": "Boosts all stats by +5.",
       "note": "Requires Rune Arc to activate",
+      "image": "ER Icon Key Item Great Rune Godrick's.png",
       "boosts": {
         "str": 5,
         "dex": 5,
@@ -13927,33 +13928,39 @@
     },
     {
       "name": "Radahn's Great Rune",
-      "effect": "Raises maximum HP, FP, and Stamina",
-      "note": "Requires Rune Arc to activate"
+      "effect": "",
+      "note": "Requires Rune Arc to activate",
+      "image": "ER Icon Key Item Great Rune Radahn's.png"
     },
     {
       "name": "Rykard's Great Rune",
       "effect": "Restores HP upon kill.",
-      "note": "Requires Rune Arc to activate"
+      "note": "Requires Rune Arc to activate",
+      "image": "ER Icon Key Item Great Rune Rykard's.png"
     },
     {
       "name": "Morgott's Great Rune",
-      "effect": "Greatly raises maximum HP",
-      "note": "Requires Rune Arc to activate"
+      "effect": "",
+      "note": "Requires Rune Arc to activate",
+      "image": "ER Icon Key Item Great Rune Morgott's.png"
     },
     {
       "name": "Malenia's Great Rune",
-      "effect": "HP is recovered with each successive hit",
-      "note": "Requires Rune Arc to activate"
+      "effect": "",
+      "note": "Requires Rune Arc to activate",
+      "image": "ER Icon Key Item Great Rune Malenia's.png"
     },
     {
       "name": "Mohg's Great Rune",
-      "effect": "Grants a blessing of blood upon a phantom's death",
-      "note": "Requires Rune Arc to activate"
+      "effect": "",
+      "note": "Requires Rune Arc to activate",
+      "image": "ER Icon Key Item Great Rune Mohg's.png"
     },
     {
       "name": "Miquella's Great Rune",
       "effect": "Dissipates Miquella's charm",
-      "note": "Requires Rune Arc to activate"
+      "note": "Requires Rune Arc to activate",
+      "image": "ER_Icon_Tool_Miquella's_Great_Rune.png"
     }
   ]
 }

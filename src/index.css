@@ -536,6 +536,7 @@ body {
 .slot-empty-hint { font-size: 11px; color: var(--ink-4); font-style: italic; }
 
 .slot-filled { display: flex; flex-direction: column; gap: 6px; height: 100%; }
+.slot-item-img { width: 38px; height: 38px; object-fit: contain; align-self: flex-start; }
 .slot-name {
   font-family: var(--serif); font-size: 17px; font-weight: 500;
   color: var(--ink); line-height: 1.2; letter-spacing: 0.005em;
@@ -910,6 +911,7 @@ body {
   background: var(--bg-3);
 }
 .picker-item-name { font-family: var(--serif); font-size: 16px; display: flex; align-items: center; gap: 7px; }
+.picker-item-img { width: 30px; height: 30px; object-fit: contain; flex-shrink: 0; }
 .picker-item-bonus {
   font-family: var(--mono); font-size: 10.5px; color: var(--gold);
   letter-spacing: 0.06em; text-transform: uppercase;

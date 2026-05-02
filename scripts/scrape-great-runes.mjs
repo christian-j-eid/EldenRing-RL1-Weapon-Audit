@@ -13,7 +13,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const OUT_PATH  = path.join(__dirname, '..', 'src', 'data', 'great-runes.json');
+const OUT_PATH        = path.join(__dirname, '..', 'src', 'data', 'great-runes.json');
+const ELDEN_RING_PATH = path.join(__dirname, '..', 'src', 'data', 'elden-ring.json');
 const BASE_URL  = 'https://eldenring.wiki.gg/api.php';
 
 const GREAT_RUNE_PAGES = [
@@ -82,6 +83,18 @@ function extractSection(wikitext, sectionName) {
   return m ? stripMarkup(m[1]) : '';
 }
 
+// ── Image extractor ───────────────────────────────────────────────────────────
+
+function extractImage(wikitext) {
+  // Gallery pattern: |image=\n<gallery>\nFilename.png|Label
+  const galleryMatch = wikitext.match(/\|\s*image\s*=\s*\n<gallery>\s*\n([^\n|]+\.png)\|/i);
+  if (galleryMatch) return galleryMatch[1].trim();
+  // Direct field: |image=Filename.png
+  const direct = extractField(wikitext, 'image');
+  if (direct && /\.(png|jpg|webp)$/i.test(direct)) return direct.trim();
+  return null;
+}
+
 // ── Stat boost parser ─────────────────────────────────────────────────────────
 
 const STAT_ALIASES = {
@@ -144,20 +157,27 @@ async function main() {
     const effect      = extractField(wikitext, 'item_effect');
     const effectSect  = extractSection(wikitext, 'Effects?') + '\n' + extractSection(wikitext, 'Notes?');
     const boosts      = parseBoosts(effect, effectSect);
+    const image       = extractImage(wikitext);
 
     runes.push({
       name,
       effect,
       note: 'Requires Rune Arc to activate',
+      ...(image ? { image } : {}),
       ...(boosts ? { boosts } : {}),
     });
 
-    console.log(`  ${name}: ${effect}${boosts ? ' → ' + JSON.stringify(boosts) : ''}`);
+    console.log(`  ${name}: ${effect}${image ? ` [img: ${image}]` : ''}${boosts ? ' → ' + JSON.stringify(boosts) : ''}`);
   }
 
   fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
   fs.writeFileSync(OUT_PATH, JSON.stringify(runes, null, 2));
   console.log(`\nWrote ${runes.length} Great Runes to ${OUT_PATH}`);
+
+  const eldenRing = JSON.parse(fs.readFileSync(ELDEN_RING_PATH, 'utf8'));
+  eldenRing.greatRunes = runes;
+  fs.writeFileSync(ELDEN_RING_PATH, JSON.stringify(eldenRing, null, 2));
+  console.log(`Patched greatRunes in ${ELDEN_RING_PATH}`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
