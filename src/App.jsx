@@ -652,6 +652,7 @@ export default function App() {
   const [advancedOpen, setAdvancedOpen] = useState(false)
   const [includeDLC, setIncludeDLC] = useState(true)
   const [excludedIds, setExcludedIds] = useState(new Set())
+  const [statBoostOnly, setStatBoostOnly] = useState(false)
 
   const [mode, setMode] = useState('find-loadout')
 
@@ -712,12 +713,12 @@ export default function App() {
 
 
   const activeTalismans = useMemo(
-    () => TALISMANS.filter(t => (includeDLC || !t.dlc) && !excludedIds.has(t.id)),
-    [includeDLC, excludedIds]
+    () => TALISMANS.filter(t => (includeDLC || !t.dlc) && !excludedIds.has(t.id) && (!statBoostOnly || fmtBonus(t.bonus))),
+    [includeDLC, excludedIds, statBoostOnly]
   )
   const activeTears = useMemo(
-    () => TEARS.filter(t => (includeDLC || !t.dlc) && !excludedIds.has(t.id)),
-    [includeDLC, excludedIds]
+    () => TEARS.filter(t => (includeDLC || !t.dlc) && !excludedIds.has(t.id) && (!statBoostOnly || fmtBonus(t.bonus))),
+    [includeDLC, excludedIds, statBoostOnly]
   )
   const activeArmor = useMemo(
     () => ARMOR.filter(a => (includeDLC || !a.dlc)),
@@ -916,6 +917,13 @@ export default function App() {
         <div className="slot-region">
           <div className="slot-region-title">
             <span>Equipment</span>
+            <button className="solve-toggle" data-on={statBoostOnly ? '1' : '0'} onClick={() => setStatBoostOnly(v => !v)}>
+              <span>Stat boosts only</span>
+              <span className="solve-toggle-state">
+                <span className="solve-toggle-label">Off</span>
+                <span className="solve-toggle-label">On</span>
+              </span>
+            </button>
           </div>
 
           <div className="region">
