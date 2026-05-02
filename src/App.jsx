@@ -523,6 +523,7 @@ function ExclSection({ title, items, excludedIds, onToggle }) {
                 {it.name}
                 {it.dlc && <span className="wp-sote">SOTE</span>}
               </span>
+              {fmtBonus(it.bonus) && <span className="excl-list-bonus">{fmtBonus(it.bonus)}</span>}
               {excluded && <span className="excl-list-x">✕</span>}
             </button>
           )
