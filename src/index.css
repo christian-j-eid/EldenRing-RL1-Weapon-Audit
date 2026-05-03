@@ -469,11 +469,57 @@ body {
 .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
 @media (max-width: 760px) {
+  /* Grids */
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
-  .weapon-bar { grid-template-columns: 1fr; }
-  .topbar { padding: 16px 20px; }
-  .main-grid { padding: 20px 16px 40px; }
-  .weapon-bar { padding: 20px 16px; }
+
+  /* Topbar */
+  .topbar { padding: 12px 16px; }
+  .brand-sub { display: none; }
+  .brand-title { font-size: 18px; }
+  .topbar-actions { gap: 6px; }
+  .btn-ghost, .btn-primary { padding: 7px 11px; font-size: 12px; }
+
+  /* Mode bar */
+  .mode-bar { padding: 0 16px; }
+  .mode-tab { padding: 10px 12px; font-size: 10px; letter-spacing: 0.1em; }
+  .mode-desc { padding: 10px 16px; font-size: 14px; }
+
+  /* Weapon bar */
+  .weapon-bar { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+  .weapon-picker-name { font-size: 22px; }
+
+  /* Advanced panel */
+  .advanced-panel { padding: 16px; }
+
+  /* Main grid */
+  .main-grid { padding: 16px 12px 40px; gap: 20px; }
+
+  /* Slot region — compensate for reduced padding */
+  .slot-region { padding: 20px; gap: 20px; }
+  .slot-region-title {
+    margin: -20px -20px 0;
+    padding: 8px 20px;
+    flex-wrap: wrap;
+    min-height: auto;
+    gap: 6px;
+  }
+  .slot-region-title > div {
+    width: 100%;
+    flex-direction: column !important;
+    gap: 4px !important;
+  }
+  .slot-region-title .solve-toggle { width: 100%; }
+
+  /* Picker — bottom sheet on mobile */
+  .picker-backdrop { align-items: flex-end; }
+  .picker {
+    width: 100%;
+    max-height: 85vh;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
 }
 
 /* ── slot card ─────────────────────────────────────────────────── */
